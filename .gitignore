@@ -1,6 +1,6 @@
- bin/
-        ksiazkaAdresowa.txt
-        ksiazka_optymalizacja.cbp
-        ksiazka_optymalizacja.depend
-        ksiazka_optymalizacja.layout
-        obj/
+bin/
+ksiazkaAdresowa.txt
+ksiazka_optymalizacja.cbp
+ksiazka_optymalizacja.depend
+ksiazka_optymalizacja.layout
+obj/
