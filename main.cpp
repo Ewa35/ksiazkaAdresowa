@@ -11,7 +11,51 @@ struct Adresat {
     int numerPorzadkowy;
 
 };
+void WyborOpcji ()
+{
+    while (true) {
+        cout << "MENU GLOWNE" << endl;
+        cout<<endl;
+        cout<<"1. Dodaj adresata"<<endl;
+        cout<<"2. Wyszukaj po imieniu"<<endl;
+        cout<<"3. Wyszukaj po nazwisku"<<endl;
+        cout<<"4. Wyswietl wszytskich adresatow"<<endl;
+        cout<<"5. Usun adresata"<<endl;
+        cout<<"6. Edytuj adresata"<<endl;
+        cout<<"9. Zamknij program"<<endl;
+        cout<<endl;
+        cout<<"Wybierz opcje:"<<endl;
+        cin>>wybor;
 
+        switch(wybor) {
+        case '1':
+            NowaOsoba(adresaci);
+            break;
+        case '2':
+            WyszukajPoImieniu(adresaci);
+
+            break;
+        case '3':
+            WyszukajPoNazwisku(adresaci);
+            break;
+
+        case '4':
+            WyswietlListeAdresatow(adresaci);
+            break;
+
+        case '5':
+            UsuwanieAdresata(adresaci);
+            break;
+        case '6':
+            EdytujDane(adresaci);
+            break;
+
+        case '9':
+            exit(0);
+        }
+        system("cls");
+    }
+}
 void WczytajDaneZPliku ( vector<Adresat> &adresaci) {
 
     string imieAdresata, nazwiskoAdresata, numerTelefonu, adresEmail, adresZamieszkania, numerPorzadkowy;
@@ -314,49 +358,9 @@ int main() {
     vector<Adresat> adresaci;
     char wybor;
     WczytajDaneZPliku(adresaci);
-
-    while (true) {
-        cout << "MENU GLOWNE" << endl;
-        cout<<endl;
-        cout<<"1. Dodaj adresata"<<endl;
-        cout<<"2. Wyszukaj po imieniu"<<endl;
-        cout<<"3. Wyszukaj po nazwisku"<<endl;
-        cout<<"4. Wyswietl wszytskich adresatow"<<endl;
-        cout<<"5. Usun adresata"<<endl;
-        cout<<"6. Edytuj adresata"<<endl;
-        cout<<"9. Zamknij program"<<endl;
-        cout<<endl;
-        cout<<"Wybierz opcje:"<<endl;
-        cin>>wybor;
-
-        switch(wybor) {
-        case '1':
-            NowaOsoba(adresaci);
-            break;
-        case '2':
-            WyszukajPoImieniu(adresaci);
-
-            break;
-        case '3':
-            WyszukajPoNazwisku(adresaci);
-            break;
-
-        case '4':
-            WyswietlListeAdresatow(adresaci);
-            break;
-
-        case '5':
-            UsuwanieAdresata(adresaci);
-            break;
-        case '6':
-            EdytujDane(adresaci);
-            break;
-
-        case '9':
-            exit(0);
-        }
-        system("cls");
-    }
+    cout<<"1. Rejestracja"<<endl;
+    cout<<"2. Logowanie"<<endl;
+    cout<<"3. Zamknij program"<<endl;
     return 0;
 
 }
