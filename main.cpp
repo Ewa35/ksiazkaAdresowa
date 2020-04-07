@@ -16,117 +16,8 @@ struct Adresat {
     int numerPorzadkowy, numerPorzadkowyUzytkownika;
 
 };
-void WczytajUzytkownikow (vector<Uzytkownik> &uzytkownicy)
-{
-    string loginUzytkownika, hasloUzytkownika, numerPorzadkowyUzytkownika;
-    Uzytkownik nowy;
-    int pozycja;
-    string linia;
-    fstream plik;
-    plik.open("listaUzytkownikow.txt",ios::in);
-    if (plik.good()) {
-        while(getline(plik,linia)) {
-
-            pozycja=linia.find("|");
-            numerPorzadkowyUzytkownika=linia.substr(0,pozycja);
-            linia.erase(0,pozycja+1);
-            pozycja=linia.find("|");
-            loginUzytkownika=linia.substr(0,pozycja);
-            linia.erase(0,pozycja+1);
-            pozycja=linia.find("|");
-            hasloUzytkownika=linia.substr(0,pozycja);
-
-            nowy.numerPorzadkowyUzytkownika=atoi(numerPorzadkowyUzytkownika.c_str());
-            nowy.loginUzytkownika=loginUzytkownika;
-            nowy.hasloUzytkownika=hasloUzytkownika;
-            uzytkownicy.push_back(nowy);
-        }
-        plik.close();
-    }
-}
-
-void RejestracjaNowegoUzytkownika(vector<Uzytkownik>& uzytkownicy)
-{
-    string loginUzytkownika, hasloUzytkownika;
-    int numerPorzadkowyUzytkownika;
-    vector<Uzytkownik> :: reverse_iterator it;
-    Uzytkownik nowy;
-    if (uzytkownicy.empty()) {
-        numerPorzadkowyUzytkownika=1;
-    } else {
-        it=uzytkownicy.rbegin();
-        numerPorzadkowyUzytkownika=it->numerPorzadkowyUzytkownika+1;
-    }
-    cout<<"Podaj login "<<endl;
-    cin>>loginUzytkownika;
-    cout<<"Podaj haslo"<<endl;
-    cin>>hasloUzytkownika;
-    nowy.numerPorzadkowyUzytkownika=numerPorzadkowyUzytkownika;
-    nowy.loginUzytkownika=loginUzytkownika;
-    nowy.hasloUzytkownika=hasloUzytkownika;
-    uzytkownicy.push_back(nowy);
-
-    fstream plik;
-    plik.open("listaUzytkownikow.txt", ios::out | ios::app);
-    if (plik.good()) {
-        plik << numerPorzadkowyUzytkownika <<"|";
-        plik << loginUzytkownika<<"|" ;
-        plik << hasloUzytkownika<<"|"<<endl;
-
-    }
-    plik.close();
-    cout<<"Zapisano!"<<endl;
-    Sleep(2000);
-
-}
 
 
-
-/*void WyborOpcji ()
-{
-    while (true) {
-        cout << "MENU GLOWNE" << endl;
-        cout<<endl;
-        cout<<"1. Dodaj adresata"<<endl;
-        cout<<"2. Wyszukaj po imieniu"<<endl;
-        cout<<"3. Wyszukaj po nazwisku"<<endl;
-        cout<<"4. Wyswietl wszytskich adresatow"<<endl;
-        cout<<"5. Usun adresata"<<endl;
-        cout<<"6. Edytuj adresata"<<endl;
-        cout<<"9. Zamknij program"<<endl;
-        cout<<endl;
-        cout<<"Wybierz opcje:"<<endl;
-        cin>>wybor;
-
-        switch(wybor) {
-        case '1':
-            NowaOsoba(adresaci);
-            break;
-        case '2':
-            WyszukajPoImieniu(adresaci);
-
-            break;
-        case '3':
-            WyszukajPoNazwisku(adresaci);
-            break;
-
-        case '4':
-            WyswietlListeAdresatow(adresaci);
-            break;
-
-        case '5':
-            UsuwanieAdresata(adresaci);
-            break;
-        case '6':
-            EdytujDane(adresaci);
-            break;
-
-        case '9':
-            exit(0);
-        }
-        system("cls");
-    }
-}*/
 void WczytajDaneZPliku ( vector<Adresat> &adresaci) {
 
     string imieAdresata, nazwiskoAdresata, numerTelefonu, adresEmail, adresZamieszkania, numerPorzadkowy;
@@ -326,7 +217,7 @@ void UsuwanieAdresata (vector<Adresat> &adresaci) {
     }
     if (iloscAdresatow==0) {
         cout<<"Nie znaleziono adresata"<<endl;
-         system("pause");
+        system("pause");
 
     }
 
@@ -425,22 +316,163 @@ void EdytujDane(vector<Adresat> &adresaci) {
     }
 
 }
+
+void WyborOpcji (vector<Adresat> &adresaci, int numerPorzadkowyUzytkownika)
+{
+    char wybor;
+    while (true) {
+        cout << "MENU GLOWNE" << endl;
+        cout<<endl;
+        cout<<"1. Dodaj adresata"<<endl;
+        cout<<"2. Wyszukaj po imieniu"<<endl;
+        cout<<"3. Wyszukaj po nazwisku"<<endl;
+        cout<<"4. Wyswietl wszytskich adresatow"<<endl;
+        cout<<"5. Usun adresata"<<endl;
+        cout<<"6. Edytuj adresata"<<endl;
+        cout<<"9. Zamknij program"<<endl;
+        cout<<endl;
+        cout<<"Wybierz opcje:"<<endl;
+        cin>>wybor;
+
+        switch(wybor) {
+        case '1':
+            NowaOsoba(adresaci);
+            break;
+        case '2':
+            WyszukajPoImieniu(adresaci);
+
+            break;
+        case '3':
+            WyszukajPoNazwisku(adresaci);
+            break;
+
+        case '4':
+            WyswietlListeAdresatow(adresaci);
+            break;
+
+        case '5':
+            UsuwanieAdresata(adresaci);
+            break;
+        case '6':
+            EdytujDane(adresaci);
+            break;
+
+        case '9':
+            exit(0);
+        }
+        system("cls");
+    }
+}
+void WczytajUzytkownikow (vector<Uzytkownik> &uzytkownicy) {
+    string loginUzytkownika, hasloUzytkownika, numerPorzadkowyUzytkownika;
+    Uzytkownik nowy;
+    int pozycja;
+    string linia;
+    fstream plik;
+    plik.open("listaUzytkownikow.txt",ios::in);
+    if (plik.good()) {
+        while(getline(plik,linia)) {
+
+            pozycja=linia.find("|");
+            numerPorzadkowyUzytkownika=linia.substr(0,pozycja);
+            linia.erase(0,pozycja+1);
+            pozycja=linia.find("|");
+            loginUzytkownika=linia.substr(0,pozycja);
+            linia.erase(0,pozycja+1);
+            pozycja=linia.find("|");
+            hasloUzytkownika=linia.substr(0,pozycja);
+
+            nowy.numerPorzadkowyUzytkownika=atoi(numerPorzadkowyUzytkownika.c_str());
+            nowy.loginUzytkownika=loginUzytkownika;
+            nowy.hasloUzytkownika=hasloUzytkownika;
+            uzytkownicy.push_back(nowy);
+        }
+        plik.close();
+    }
+}
+
+void RejestracjaNowegoUzytkownika(vector<Uzytkownik>& uzytkownicy) {
+    string loginUzytkownika, hasloUzytkownika;
+    int numerPorzadkowyUzytkownika;
+    vector<Uzytkownik> :: reverse_iterator it;
+    Uzytkownik nowy;
+    if (uzytkownicy.empty()) {
+        numerPorzadkowyUzytkownika=1;
+    } else {
+        it=uzytkownicy.rbegin();
+        numerPorzadkowyUzytkownika=it->numerPorzadkowyUzytkownika+1;
+    }
+    cout<<"Podaj login "<<endl;
+    cin>>loginUzytkownika;
+    cout<<"Podaj haslo"<<endl;
+    cin>>hasloUzytkownika;
+    nowy.numerPorzadkowyUzytkownika=numerPorzadkowyUzytkownika;
+    nowy.loginUzytkownika=loginUzytkownika;
+    nowy.hasloUzytkownika=hasloUzytkownika;
+    uzytkownicy.push_back(nowy);
+
+    fstream plik;
+    plik.open("listaUzytkownikow.txt", ios::out | ios::app);
+    if (plik.good()) {
+        plik << numerPorzadkowyUzytkownika <<"|";
+        plik << loginUzytkownika<<"|" ;
+        plik << hasloUzytkownika<<"|"<<endl;
+
+    }
+    plik.close();
+    cout<<"Zapisano!"<<endl;
+    Sleep(2000);
+
+}
+
+void LogowanieUzytkownika(vector<Uzytkownik>& uzytkownicy, vector<Adresat> &adresaci) {
+    string loginUzytkownika, hasloUzytkownika;
+    int numerPorzadkowyUzytkownika, iloscZnalezionychUzytkownikow=0;
+
+
+    for(int i=3; i>0; i--) {
+        cout<<"Podaj login "<<endl;
+        cin>>loginUzytkownika;
+        cout<<"Podaj haslo"<<endl;
+        cin>>hasloUzytkownika;
+        for (vector <Uzytkownik> :: iterator itr =uzytkownicy.begin(), koniec=uzytkownicy.end(); itr!=koniec; ++itr) {
+            if (loginUzytkownika==itr->loginUzytkownika && hasloUzytkownika==itr->hasloUzytkownika) {
+                cout<<"Zalogowano!"<<endl;
+                Sleep(1500);
+                numerPorzadkowyUzytkownika=itr->numerPorzadkowyUzytkownika;
+                iloscZnalezionychUzytkownikow++;
+                i=0;
+                WyborOpcji(adresaci, numerPorzadkowyUzytkownika);
+            }
+        }
+            if (iloscZnalezionychUzytkownikow==0) {
+            cout<<"Bledny login lub haslo zosta³o Ci "<<i-1<<" prob"<<endl;
+            Sleep(1500);
+            system("cls");
+        }
+
+
+    }
+}
+
 int main() {
     vector<Adresat> adresaci;
     vector<Uzytkownik> uzytkownicy;
     char wybor;
     WczytajUzytkownikow(uzytkownicy);
-   // WczytajDaneZPliku(adresaci);
+    // WczytajDaneZPliku(adresaci);
     cout<<"1. Rejestracja"<<endl;
     cout<<"2. Logowanie"<<endl;
     cout<<"3. Zamknij program"<<endl;
 
     cout<<"Wybierz opcje"<<endl;
     cin>>wybor;
-    switch (wybor)
-    {
+    switch (wybor) {
     case '1':
-       RejestracjaNowegoUzytkownika(uzytkownicy);
+        RejestracjaNowegoUzytkownika(uzytkownicy);
+        break;
+    case '2':
+        LogowanieUzytkownika(uzytkownicy, adresaci);
         break;
     }
     return 0;
