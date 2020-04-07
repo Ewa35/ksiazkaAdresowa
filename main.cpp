@@ -5,13 +5,84 @@
 #include <windows.h>
 #include <cstdlib>
 using namespace std;
+struct Uzytkownik {
+    string loginUzytkownika, hasloUzytkownika;
+    int numerPorzadkowyUzytkownika;
+
+};
 
 struct Adresat {
     string imieAdresata, nazwiskoAdresata, numerTelefonu, adresEmail, adresZamieszkania;
-    int numerPorzadkowy;
+    int numerPorzadkowy, numerPorzadkowyUzytkownika;
 
 };
-void WyborOpcji ()
+void WczytajUzytkownikow (vector<Uzytkownik> &uzytkownicy)
+{
+    string loginUzytkownika, hasloUzytkownika, numerPorzadkowyUzytkownika;
+    Uzytkownik nowy;
+    int pozycja;
+    string linia;
+    fstream plik;
+    plik.open("listaUzytkownikow.txt",ios::in);
+    if (plik.good()) {
+        while(getline(plik,linia)) {
+
+            pozycja=linia.find("|");
+            numerPorzadkowyUzytkownika=linia.substr(0,pozycja);
+            linia.erase(0,pozycja+1);
+            pozycja=linia.find("|");
+            loginUzytkownika=linia.substr(0,pozycja);
+            linia.erase(0,pozycja+1);
+            pozycja=linia.find("|");
+            hasloUzytkownika=linia.substr(0,pozycja);
+
+            nowy.numerPorzadkowyUzytkownika=atoi(numerPorzadkowyUzytkownika.c_str());
+            nowy.loginUzytkownika=loginUzytkownika;
+            nowy.hasloUzytkownika=hasloUzytkownika;
+            uzytkownicy.push_back(nowy);
+        }
+        plik.close();
+    }
+}
+
+void RejestracjaNowegoUzytkownika(vector<Uzytkownik>& uzytkownicy)
+{
+    string loginUzytkownika, hasloUzytkownika;
+    int numerPorzadkowyUzytkownika;
+    vector<Uzytkownik> :: reverse_iterator it;
+    Uzytkownik nowy;
+    if (uzytkownicy.empty()) {
+        numerPorzadkowyUzytkownika=1;
+    } else {
+        it=uzytkownicy.rbegin();
+        numerPorzadkowyUzytkownika=it->numerPorzadkowyUzytkownika+1;
+    }
+    cout<<"Podaj login "<<endl;
+    cin>>loginUzytkownika;
+    cout<<"Podaj haslo"<<endl;
+    cin>>hasloUzytkownika;
+    nowy.numerPorzadkowyUzytkownika=numerPorzadkowyUzytkownika;
+    nowy.loginUzytkownika=loginUzytkownika;
+    nowy.hasloUzytkownika=hasloUzytkownika;
+    uzytkownicy.push_back(nowy);
+
+    fstream plik;
+    plik.open("listaUzytkownikow.txt", ios::out | ios::app);
+    if (plik.good()) {
+        plik << numerPorzadkowyUzytkownika <<"|";
+        plik << loginUzytkownika<<"|" ;
+        plik << hasloUzytkownika<<"|"<<endl;
+
+    }
+    plik.close();
+    cout<<"Zapisano!"<<endl;
+    Sleep(2000);
+
+}
+
+
+
+/*void WyborOpcji ()
 {
     while (true) {
         cout << "MENU GLOWNE" << endl;
@@ -55,7 +126,7 @@ void WyborOpcji ()
         }
         system("cls");
     }
-}
+}*/
 void WczytajDaneZPliku ( vector<Adresat> &adresaci) {
 
     string imieAdresata, nazwiskoAdresata, numerTelefonu, adresEmail, adresZamieszkania, numerPorzadkowy;
@@ -356,11 +427,22 @@ void EdytujDane(vector<Adresat> &adresaci) {
 }
 int main() {
     vector<Adresat> adresaci;
+    vector<Uzytkownik> uzytkownicy;
     char wybor;
-    WczytajDaneZPliku(adresaci);
+    WczytajUzytkownikow(uzytkownicy);
+   // WczytajDaneZPliku(adresaci);
     cout<<"1. Rejestracja"<<endl;
     cout<<"2. Logowanie"<<endl;
     cout<<"3. Zamknij program"<<endl;
+
+    cout<<"Wybierz opcje"<<endl;
+    cin>>wybor;
+    switch (wybor)
+    {
+    case '1':
+       RejestracjaNowegoUzytkownika(uzytkownicy);
+        break;
+    }
     return 0;
 
 }
