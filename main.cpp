@@ -319,6 +319,7 @@ void EdytujDane(vector<Adresat> &adresaci) {
 
 void WyborOpcji (vector<Adresat> &adresaci, int numerPorzadkowyUzytkownika)
 {
+    system("cls");
     char wybor;
     while (true) {
         cout << "MENU GLOWNE" << endl;
