@@ -20,7 +20,7 @@ struct Adresat {
 
 void WczytajDaneZPliku ( vector<Adresat> &adresaci) {
 
-    string imieAdresata, nazwiskoAdresata, numerTelefonu, adresEmail, adresZamieszkania, numerPorzadkowy;
+    string imieAdresata, nazwiskoAdresata, numerTelefonu, adresEmail, adresZamieszkania, numerPorzadkowy, numerPorzadkowyUzytkownika;
     Adresat nowy;
     int pozycja;
     string linia;
@@ -31,6 +31,9 @@ void WczytajDaneZPliku ( vector<Adresat> &adresaci) {
 
             pozycja=linia.find("|");
             numerPorzadkowy=linia.substr(0,pozycja);
+            linia.erase(0,pozycja+1);
+            pozycja=linia.find("|");
+            numerPorzadkowyUzytkownika=linia.substr(0,pozycja);
             linia.erase(0,pozycja+1);
             pozycja=linia.find("|");
             imieAdresata=linia.substr(0,pozycja);
@@ -48,6 +51,7 @@ void WczytajDaneZPliku ( vector<Adresat> &adresaci) {
             adresEmail=linia.substr(0,pozycja);
 
             nowy.numerPorzadkowy=atoi(numerPorzadkowy.c_str());
+            nowy.numerPorzadkowyUzytkownika=atoi(numerPorzadkowyUzytkownika.c_str());
             nowy.imieAdresata=imieAdresata;
             nowy.nazwiskoAdresata=nazwiskoAdresata;
             nowy.adresZamieszkania=adresZamieszkania;
@@ -60,6 +64,7 @@ void WczytajDaneZPliku ( vector<Adresat> &adresaci) {
 }
 void WyswietlenieDanychAdresata ( vector<Adresat> &adresaci,vector <Adresat> :: iterator itr) {
     cout<<itr-> numerPorzadkowy<<" ";
+    cout<<itr-> numerPorzadkowyUzytkownika<<" ";
     cout<<itr-> imieAdresata<<" ";
     cout<<itr-> nazwiskoAdresata<<" ";
     cout<<itr-> adresZamieszkania<<" ";
@@ -75,6 +80,7 @@ void UsuwanieIZapisywanieDoPliku( vector<Adresat> &adresaci) {
     if (plik.good()) {
         for (vector <Adresat> :: iterator itr =adresaci.begin(), koniec=adresaci.end(); itr!=koniec; ++itr) {
             plik << itr-> numerPorzadkowy <<"|";
+            plik << itr-> numerPorzadkowyUzytkownika <<"|";
             plik << itr->imieAdresata<<"|" ;
             plik << itr->nazwiskoAdresata<<"|";
             plik << itr->adresZamieszkania<<"|";
@@ -85,7 +91,7 @@ void UsuwanieIZapisywanieDoPliku( vector<Adresat> &adresaci) {
     plik.close();
 
 }
-void NowaOsoba ( vector<Adresat> &adresaci) {
+void NowaOsoba ( vector<Adresat> &adresaci, int numerPorzadkowyUzytkownika) {
 
     system ("cls");
     vector<Adresat> :: reverse_iterator itr;
@@ -111,6 +117,7 @@ void NowaOsoba ( vector<Adresat> &adresaci) {
     getline(cin, adresZamieszkania);
 
     dane.numerPorzadkowy=numerPorzadkowy;
+    dane.numerPorzadkowyUzytkownika=numerPorzadkowyUzytkownika;
     dane.imieAdresata=imieAdresata;
     dane.nazwiskoAdresata=nazwiskoAdresata;
     dane.adresZamieszkania=adresZamieszkania;
@@ -122,6 +129,7 @@ void NowaOsoba ( vector<Adresat> &adresaci) {
     plik.open("ksiazkaAdresowa.txt", ios::out | ios::app);
     if (plik.good()) {
         plik << numerPorzadkowy <<"|";
+        plik << numerPorzadkowyUzytkownika <<"|";
         plik << imieAdresata<<"|" ;
         plik << nazwiskoAdresata<<"|";
         plik << adresZamieszkania<<"|";
@@ -337,7 +345,7 @@ void WyborOpcji (vector<Adresat> &adresaci, int numerPorzadkowyUzytkownika)
 
         switch(wybor) {
         case '1':
-            NowaOsoba(adresaci);
+            NowaOsoba(adresaci, numerPorzadkowyUzytkownika);
             break;
         case '2':
             WyszukajPoImieniu(adresaci);
@@ -392,7 +400,7 @@ void WczytajUzytkownikow (vector<Uzytkownik> &uzytkownicy) {
     }
 }
 
-void RejestracjaNowegoUzytkownika(vector<Uzytkownik>& uzytkownicy) {
+void RejestracjaNowegoUzytkownika(vector<Uzytkownik>& uzytkownicy, vector<Adresat> &adresaci) {
     string loginUzytkownika, hasloUzytkownika;
     int numerPorzadkowyUzytkownika;
     vector<Uzytkownik> :: reverse_iterator it;
@@ -423,6 +431,7 @@ void RejestracjaNowegoUzytkownika(vector<Uzytkownik>& uzytkownicy) {
     plik.close();
     cout<<"Zapisano!"<<endl;
     Sleep(2000);
+    WyborOpcji(adresaci, numerPorzadkowyUzytkownika);
 
 }
 
@@ -447,13 +456,14 @@ void LogowanieUzytkownika(vector<Uzytkownik>& uzytkownicy, vector<Adresat> &adre
             }
         }
             if (iloscZnalezionychUzytkownikow==0) {
-            cout<<"Bledny login lub haslo zosta³o Ci "<<i-1<<" prob"<<endl;
+            cout<<"Bledny login lub haslo zostalo Ci "<<i-1<<" prob"<<endl;
             Sleep(1500);
             system("cls");
         }
 
 
     }
+
 }
 
 int main() {
@@ -470,10 +480,13 @@ int main() {
     cin>>wybor;
     switch (wybor) {
     case '1':
-        RejestracjaNowegoUzytkownika(uzytkownicy);
+        RejestracjaNowegoUzytkownika(uzytkownicy, adresaci);
         break;
     case '2':
         LogowanieUzytkownika(uzytkownicy, adresaci);
+        break;
+    case '3':
+        exit(0);
         break;
     }
     return 0;
